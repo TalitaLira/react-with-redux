@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { playVideo } from '../actions';
 
-const VideoListItem = ({video, onVideoSelect}) => {
+const VideoListItem = ({video, playVideo}) => {
   const imageUrl = video.snippet.thumbnails.default.url;
 
   return (
-    <li onClick={() => onVideoSelect(video)} className="list-group-item">
+    <li onClick={() => playVideo(video)} className="list-group-item">
       <div className="video-list-media">
         <div className="media-left">
           <img className="media-object" src={imageUrl} />
@@ -19,4 +21,13 @@ const VideoListItem = ({video, onVideoSelect}) => {
     </li>
   )};
 
-export default VideoListItem;
+
+const mapDispatchToProps = function(dispatch) {
+  return {
+    playVideo: (video) => {
+      dispatch(playVideo(video))
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(VideoListItem);

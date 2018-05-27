@@ -1,0 +1,64 @@
+npm redux
+store
+  estado global da sua app
+  {
+    usuarioLogado: {
+      nome: null,
+      idade: null,
+    }
+  }
+
+action creator
+  ação que chama o reducer para alterar um "pedaço" do state que está na store
+  function alteraUsuarioLogado(dispatch, nome) {
+    // action
+    return dispatch({
+      type: 'ALTERA_NOME',
+      usuario: usuario,
+    })
+  }
+
+  alteraNome(dispatch, 'Talita');
+
+reducer
+  função que atualiza o store
+
+  function (previousState, action) {
+
+    switch(action.type) {
+      case 'ALTERA_NOME':
+        return {
+          ...previousState,
+          usuarioLogado: action.usuario,
+        };
+
+      default:
+        return previousState;
+    }
+
+  }
+
+
+
+
+
+
+
+npm react-redux
+createStore
+
+<Provider>
+
+
+mapStateToProps
+
+mapDispatchToProps
+
+connect
+
+
+
+
+
+
+

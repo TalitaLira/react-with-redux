@@ -1,13 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import VideoListItem from './video_list_item';
 
 const VideoList = (props) => {
-  
+
   const videoItems = props.videos.map((video) => {
     return (
-      <VideoListItem 
+      <VideoListItem
         onVideoSelect={props.onVideoSelect}
-        key={video.etag} 
+        key={video.etag}
         video={video} />
     );
   });
@@ -19,4 +20,10 @@ const VideoList = (props) => {
   );
 };
 
-export default VideoList;
+const mapStateToProps = function(state) {
+  return {
+    videos: state.videos
+  };
+}
+
+export default connect(mapStateToProps, null)(VideoList);

@@ -2,6 +2,10 @@ import _ from 'lodash';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import YTSearch from 'youtube-api-search';
+import { Provider, connect } from 'react-redux';
+import { createStore } from 'redux';
+import reducer from './reducer';
+import { setVideos, playVideo } from './actions';
 import SearchBar from './components/search_bar';
 import VideoList from './components/video_list';
 import VideoDetail from './components/video_detail';
@@ -13,39 +17,47 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      videos: [],
-      selectedVideo: null
-    };
-
     this.videoSearch('surfboards');
-
   }
 
   videoSearch(term){
     YTSearch({key: API_KEY, term: term}, (videos) => {
-      this.setState({
-        videos: videos,
-        selectedVideo: videos[0]
-      });
+      this.props.setVideos(videos);
+      this.props.playVideo(videos[0]);
     });
   }
 
   render() {
     const videoSearch = _.debounce((term) => { this.videoSearch(term) }, 400)
-
+    const { videos } = this.props;
     return (
       <div>
           <SearchBar onSearchTermChange={videoSearch} />
-          <VideoDetail video={this.state.selectedVideo} />
-          <VideoList
-            onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
-            videos={this.state.videos} />
+          <VideoDetail />
+          <VideoList />
       </div>
     );
   }
 }
 
 // Take this component's generated HTML and put it on the page (in the DOM)
+const store = createStore(reducer);
+const mapDispatchToProps = function (dispatch) {
+  return {
+    setVideos: videos => {
+      dispatch(setVideos(videos))
+    },
+    playVideo: video => {
+      dispatch(playVideo(video))
+    }
+  }
+}
 
-ReactDOM.render(<App />, document.querySelector('.container'));
+const ConnectedApp = connect(null, mapDispatchToProps)(App);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedApp />
+  </Provider>,
+  document.querySelector('.container')
+);
